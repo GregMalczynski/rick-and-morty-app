@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ShowCharacter from './ShowCharacter'
 import styled from 'styled-components'
 import { useApiData } from '../api/useApiData'
@@ -11,19 +11,26 @@ const Main = () => {
     const [ page, setPage ] = useState(1)
     const [ searchValue, setSearchValue] = useState("")
     const [ isCharacterInfoVisible, setIsCharacterInfoVisible ] = useState(false)
+    const [ pageButtons, setPageButtons ] = useState()
     const [ id, setId ] = useState(0)
 
     const { dataApi } = useApiData(page, searchValue)
     const { dataApiCharacter } = useApiDataCharacter(id)
     
-    const arr = []
     const pagesCount = Math.ceil(dataApi.data?.characters.info.count / 20)
 
-    if ( pagesCount ) {
-        for ( let i = 0; i < pagesCount; i++ ) {
-            arr.push(i)
+    useEffect(() => {
+        if ( pagesCount ) {
+            const arr = []
+                for ( let i = 0; i < pagesCount; i++ ) {
+                    arr.push(i)
+                }
+            setPageButtons(arr)
+            console.log('Array ' + arr)
         }
-    }
+    }, [])
+    
+    console.log('pageButton ' + pageButtons)
     
     const handleChangeSearchValue = (e) => {
         setPage(1)
@@ -48,8 +55,7 @@ const Main = () => {
                     <input value={searchValue} onChange={handleChangeSearchValue} placeholder="Search Character..."/>
                 </InputWrapper>
                 <ItemList>
-                    {dataApi.data?.characters?.results.length > 0 ?
-                    
+                    {dataApi.data?.characters?.results.length > 0 ?                   
                     (dataApi.data?.characters?.results.map((item, index) => {
                         return <ShowCharacter 
                             key={index} 
@@ -62,7 +68,7 @@ const Main = () => {
                 }
                 </ItemList>
                 <PagesButtons>
-                    {arr.map((item, index) => {
+                    {pageButtons?.map((item, index) => {
                         return <PageButton key={index} onClick={() => setPage(index + 1)}>{index + 1}</PageButton>
                     })}
                 </PagesButtons>
