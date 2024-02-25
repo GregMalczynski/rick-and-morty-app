@@ -26,17 +26,18 @@ const Main = () => {
                     arr.push(i)
                 }
             setPageButtons(arr)
-            console.log('Array ' + arr)
         }
     }, [])
-    
-    console.log('pageButton ' + pageButtons)
     
     const handleChangeSearchValue = (e) => {
         setPage(1)
         setSearchValue(e.target.value)
     }
 
+    const button = pageButtons?.map((item, index) => {
+            return <PageButton key={index} onClick={() => setPage(index + 1)}>{index + 1}</PageButton>
+    })
+    
     return(
         <MainWrapper>
             <PopUpWrapper isCharacterInfoVisible={isCharacterInfoVisible}>
@@ -68,9 +69,7 @@ const Main = () => {
                 }
                 </ItemList>
                 <PagesButtons>
-                    {pageButtons?.map((item, index) => {
-                        return <PageButton key={index} onClick={() => setPage(index + 1)}>{index + 1}</PageButton>
-                    })}
+                    <>{button}</>
                 </PagesButtons>
             </PageContainer>
         </MainWrapper>
